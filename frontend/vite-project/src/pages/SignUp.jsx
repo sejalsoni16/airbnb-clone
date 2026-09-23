@@ -4,7 +4,7 @@ import { IoMdEyeOff } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import axios from 'axios';
-import { authDataContext } from '../Context/AuthContext';
+import { authDataContext } from '../Context/AuthContext.jsx';
 
 
 function SignUp() {
