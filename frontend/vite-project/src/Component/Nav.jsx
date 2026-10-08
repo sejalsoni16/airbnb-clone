@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react'
-import logo from '../assets/airbnblogo.jpg'
-import { IoIosSearch } from 'react-icons/io'
+import React, { useContext, useState } from 'react';
+import logo from '../assets/airbnblogo.jpg';
+import { IoIosSearch } from 'react-icons/io';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CgProfile } from "react-icons/cg";
 import { MdWhatshot } from "react-icons/md";
@@ -13,8 +13,9 @@ import { IoBedOutline } from "react-icons/io5";
 import { FaTreeCity } from "react-icons/fa6";
 import { BiBuildingHouse } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
-import { authDataContext } from '../Context/AuthContext';
+import { authDataContext } from '../Context/AuthContext.jsx';
 import axios from 'axios';
+import { userDataContext } from '../Context/UserContext.jsx';
 
 
 
@@ -22,11 +23,14 @@ function Nav() {
   let[showpopup, setShowpopup] = useState(false)
   let navigate = useNavigate()
   let {serverUrl} = useContext(authDataContext)
+  let {userData, setUserData} = useContext(userDataContext)
+
 
 
   const handleLogout = async() => {
     try{
       let result = await axios.post(serverUrl + "/api/auth/logout", {withCredentials:true})
+      setUserData(null)
       console.log(result)
     }catch(error){
       console.log(error);
@@ -49,7 +53,8 @@ function Nav() {
           <span className='text-[17px] cursor-pointer rounded-[50px] hover:bg-[#ded9d9] px-[8px] py-[5px] hidden md:block '>List your home</span>
           <button className='px-[20px] py-[10px] flex items-center justify-center gap-[5px] border-[1px] border-[#8d8c8c] rounded-[50px] hover:shadow-lg' onClick={()=>setShowpopup(prev=>!prev)}>
             <span><GiHamburgerMenu className='w-[20px] h-[20px]' /></span>
-            <span><CgProfile className='w-[23px] h-[23px]' /></span>
+            {userData == null && <span><CgProfile className='w-[23px] h-[23px]' /></span>}
+            {userData != null && <span className='w-[30px] h-[30px] bg-[#000000] text-[white] rounded-full flex items-center justify-center '>{userData?.name.slice(0,1)}</span>}
           </button>
 
           {showpopup && <div className='w-[220px] h-[250px] absolute bg-slate-50 top-[110%] right-[3%] border-[1px] border-[#aaa9a9] z-10 rounded-lg md:right-[10%]'>
@@ -112,7 +117,7 @@ function Nav() {
           <h3>PG</h3>
         </div>
 
-        <div className='flex items-center justify-center flex-col hover:border-b-[1px] border-[#a6a5a5] text-[13px]'>
+        <div className='flex items-center justify-center flex-col hover:border-b-[1px] border-[#a6a5a5] text-[13px] text-nowrap'>
           <FaTreeCity className='w-[30px] h-[30px] text-black' />
           <h3>Cabins</h3>
         </div>

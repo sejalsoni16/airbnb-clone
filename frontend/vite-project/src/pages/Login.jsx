@@ -3,12 +3,14 @@ import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { authDataContext } from '../Context/AuthContext';
+import { authDataContext } from '../Context/AuthContext.jsx';
 import axios from 'axios';
+import { userDataContext } from '../Context/UserContext.jsx';
 
 function Login() {
     let[show, setShow] = useState(false)
     let {serverUrl} = useContext(authDataContext)
+    let {userData, setUserData} = useContext(userDataContext)
     let navigate = useNavigate();
     let [email, setEmail]= useState("")
     let [password, setPassword]= useState("")
@@ -19,6 +21,8 @@ function Login() {
           email,
           password
         },{withCredentials:true});
+        setUserData(result.data)
+        navigate("/")
         console.log(result)
       } catch(error){
           console.log("LOGIN ERROR:", error.response?.data);
