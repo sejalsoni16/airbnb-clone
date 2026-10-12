@@ -37,8 +37,8 @@ function Nav() {
     }
   }
   return (
-    <div>
-      <div className='w-[100vw] min-h-[80px] border-b-[1px] border-[#dcdcdc] px-[10px] flex items-center justify-between md:px-[40px]'>
+    <div className='fixed top-0'>
+      <div className='w-[100vw] min-h-[80px] border-b-[1px] border-[#dcdcdc] px-[10px] flex items-center justify-between md:px-[40px] '>
 
         <div>
           <img src={logo} alt="" className='w-[180px] min-h-[70px]' />
