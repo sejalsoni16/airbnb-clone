@@ -21,7 +21,8 @@ function UserContext( {children} ) {
   },[])
   let value={
     userData,
-    setUserData
+    setUserData,
+    getCurrentUser
   }
   return (
     <div>

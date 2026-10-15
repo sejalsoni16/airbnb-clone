@@ -21,6 +21,7 @@ function ListingContext({children}) {
   let [category,setCategory] = useState("")
   let [adding,setAdding] = useState(false)
   let [listingData,setListingData] = useState([])
+  let [newListData,setNewListData] = useState([])
   let {serverUrl} = useContext(authDataContext);
   
 
@@ -66,6 +67,7 @@ function ListingContext({children}) {
     try {
       let result = await axios.get(serverUrl + "/api/listing/get", {withCredentials:true})
       setListingData(result.data)
+      setNewListData(result.data)
 
     } catch (error) {
       console.log(error)
@@ -92,6 +94,7 @@ function ListingContext({children}) {
     handleAddListing,
     adding,setAdding,
     listingData,setListingData,
+    newListData,setNewListData,
   }
   return (
     <div>

@@ -92,3 +92,17 @@ export const addListing = async (req, res) => {
       res.status(500).json({message:`getListing error ${error}`})
     }
   }
+
+
+  export const findListing = async(req,res)=>{
+    try {
+      let {id} = req.params
+      let listing = await Listing.findById(id);
+      if(!listing){
+        res.status(400).json({message:"listing not found"})
+      }
+      res.status(200).json(listing)
+    } catch (error) {
+      res.status(500).json({message:`findListing error ${error}`})
+    }
+  }
