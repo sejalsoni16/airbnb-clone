@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { authDataContext } from './AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 
-export const listingDataContext = createContext();
+export const listingDataContext = createContext()
 
 function ListingContext({children}) {
   let navigate = useNavigate();
@@ -113,6 +113,7 @@ function ListingContext({children}) {
     cardDetails,setCardDetails,
     updating,setUpdating,
     deleting,setDeleting,
+    getListing,
   }
   return (
     <div>

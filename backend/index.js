@@ -7,6 +7,7 @@ import connectDb from "./config/db.js";
 import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
 import listingRouter from "./routes/listing.route.js";
+import bookingRouter from "./routes/booking.route.js";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ console.log("Cloudinary environment check:", {
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/listing", listingRouter);
+app.use("/api/booking", bookingRouter);
 
 app.listen(port, async () => {
   try {

@@ -49,7 +49,7 @@ function Nav() {
 
     }
   return (
-    <div className='fixed top-0 bg-[white]'>
+    <div className='fixed top-0 left-0 z-[200] bg-[white]'>
       <div className='w-[100vw] min-h-[80px] border-b-[1px] border-[#dcdcdc] px-[10px] flex items-center justify-between md:px-[40px] '>
 
         <div>
@@ -61,7 +61,7 @@ function Nav() {
           <button className='absolute p-[10px] rounded-[50px] bg-[red] right-[3%] top-[5px]'><IoIosSearch className='w-[24px] h-[20px] text-[white]' /></button>
         </div>
 
-        <div className='flex items-center justify-center gap-[10px] relative'>
+        <div className='flex items-center justify-center gap-[10px] relative z-[100]'>
           <span className='text-[17px] cursor-pointer rounded-[50px] hover:bg-[#ded9d9] px-[8px] py-[5px] hidden md:block ' onClick={()=>navigate("/listingpage1")}>List your home</span>
           <button className='px-[20px] py-[10px] flex items-center justify-center gap-[5px] border-[1px] border-[#8d8c8c] rounded-[50px] hover:shadow-lg' onClick={()=>setShowPopup(prev=>!prev)}>
             <span><GiHamburgerMenu className='w-[20px] h-[20px]' /></span>
@@ -69,7 +69,7 @@ function Nav() {
             {userData != null && <span className='w-[30px] h-[30px] bg-[#000000] text-[white] rounded-full flex items-center justify-center '>{userData?.name.slice(0,1)}</span>}
           </button>
 
-          {showpopup && <div className='w-[220px] h-[250px] absolute bg-slate-50 top-[110%] right-[3%] border-[1px] border-[#aaa9a9] z-10 rounded-lg md:right-[10%]'>
+          {showpopup && <div className='absolute right-0 top-full z-[210] mt-2 h-[250px] w-[220px] rounded-lg border border-[#aaa9a9] bg-slate-50 shadow-lg'>
             <ul className='w-[100%] h-[100%] text-[17px] flex items-satrt justify-around flex-col py-[10px]'>
               {!userData && <li className='w-[100%] px-[15px] py-[10px] hover:bg-slate-100 cursor-pointer' onClick={()=>{navigate("/login"); setShowPopup(false)}}>Login</li>}
 
@@ -81,7 +81,7 @@ function Nav() {
 
               <li className='w-[100%] px-[15px] py-[10px] hover:bg-slate-100 cursor-pointer'onClick={()=>{navigate("/mylisting");setShowPopup(false)}}>My Listing</li>
               
-              <li className='w-[100%] px-[15px] py-[10px] hover:bg-slate-100 cursor-pointer'>Check Booking</li>
+              <li className='w-[100%] px-[15px] py-[10px] hover:bg-slate-100 cursor-pointer' onClick={()=>{navigate("/mybooking"); setShowPopup(false)}}>My Booking</li>
             </ul>
           </div>}
 

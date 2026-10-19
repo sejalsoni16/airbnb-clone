@@ -10,6 +10,7 @@ import { useContext } from "react";
 import { userDataContext } from "./Context/UserContext.jsx";
 import MyListing from "./pages/MyListing.jsx";
 import ViewCard from "./pages/ViewCard.jsx";
+import MyBooking from "./pages/MyBooking.jsx";
 
 function App() {
   let {userData} = useContext(userDataContext);
@@ -32,6 +33,8 @@ function App() {
         element={userData != null ? <MyListing/>:<Navigate to={"/"}/>} />
       <Route path="/viewcard" 
         element={userData != null ? <ViewCard/>:<Navigate to={"/"}/>} />
+      <Route path="/mybooking" 
+        element={userData != null ? <MyBooking/>:<Navigate to={"/"}/>} />
     </Routes>
   );
 }

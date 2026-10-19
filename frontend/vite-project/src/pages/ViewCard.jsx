@@ -1,17 +1,21 @@
 import { userDataContext } from '../Context/UserContext.jsx';
 import { listingDataContext } from '../Context/ListingContext.jsx';
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FaArrowLeftLong } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 import { RxCross2 } from "react-icons/rx";
 import axios from 'axios';
 import { authDataContext } from '../Context/AuthContext.jsx';
+import { MdOutlineStar } from "react-icons/md";
+import { bookingDataContext } from '../Context/BookingContext.jsx';
+
 
 function ViewCard() {
   let navigate = useNavigate()
   let {cardDetails} = useContext(listingDataContext)
   let {userData} = useContext(userDataContext)
   let [updatePopUp,setUpdatePopUp] = useState(false);
+  let [bookingPopUp,setBookingPopUp] = useState(false);
   let [title,setTitle] = useState(cardDetails.title)
   let [description,setDescription] = useState(cardDetails.description)
   let [backEndImage1,setBackEndImage1] = useState(null)
@@ -23,6 +27,31 @@ function ViewCard() {
   let {serverUrl} = useContext(authDataContext)
   let {updating,setUpdating} = useContext(listingDataContext)
   let {deleting,setDeleting} = useContext(listingDataContext)
+  let [minDate,setMinDate] = useState("")
+  let {checkIn,setCheckIn,
+      checkOut,setCheckOut,
+      total,setTotal,
+      night,setNight,handleBooking} = useContext(bookingDataContext)
+
+      useEffect(()=>{
+        if(checkIn && checkOut){
+          let inDate = new Date(checkIn)
+          let outDate = new Date(checkOut)
+          let n = ((outDate - inDate) / (24*60*60*1000 ))
+          setNight(n)
+          let airBnbCharge = (cardDetails.rent*(7/100))
+          let tax = (cardDetails.rent*(7/100))
+
+          if(n>0){
+            setTotal((cardDetails.rent * n) + airBnbCharge + tax)
+          }
+          else{
+            setTotal(0)
+          }
+        }
+      },[checkIn,checkOut,cardDetails.rent,total])
+
+
   
   
   const handleUpdateListing = async()=>{
@@ -85,6 +114,12 @@ function ViewCard() {
       let file = e.target.files[0]
       setBackEndImage3(file)
     }
+    useEffect(()=>{
+      let today = new Date().toISOString().split('T')[0]
+      setMinDate(today)
+    },[])
+
+    
   return (
   <div className="h-screen w-full bg-white relative overflow-hidden">
 
@@ -198,7 +233,7 @@ function ViewCard() {
           ) : (
             <button
               type="button"
-              className="rounded-lg bg-red-600 px-5 py-2 text-sm font-medium text-white hover:bg-red-700 md:text-base"
+              className="rounded-lg bg-red-600 px-5 py-2 text-sm font-medium text-white hover:bg-red-700 md:text-base" onClick={()=>setBookingPopUp(prev => !prev)}
             >
               Reserve
             </button>
@@ -276,11 +311,95 @@ function ViewCard() {
 
           <button className='px-[10px] py-[10px] bg-[red] text-[white] text-[15px] md:px-[100px] rounded-lg md:text-[18px] text-nowrap' onClick={handleDeleteListing} disabled={deleting}>{deleting?"Deleting...":"Delete Listing"}</button>
           </div>
-
+          
       </form>
 
       </div>
     )}
+
+      {bookingPopUp && <div className="absolute inset-0 z-[100] flex items-center justify-center gap-8 overflow-y-auto bg-white/80 p-6 backdrop-blur-sm lg:flex-row" >
+
+        <button type="button" className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white" onClick={() => setBookingPopUp(false)}>
+          <RxCross2 className="h-6 w-6" />
+        </button>
+          
+            <form action="" className="flex min-h-[550px] w-full max-w-[565px] flex-col items-center justify-start gap-5 rounded-xl border border-gray-200 bg-[#f7fbfc] p-6 shadow-sm" onSubmit={(e)=>{e.preventDefault()}}>
+              <h1 className="w-full border-b border-gray-400 pb-4 text-center text-2xl font-normal text-black">
+                Confirm & Book
+              </h1>
+              <div className="flex w-full flex-1 flex-col items-start justify-start gap-7 pt-4">
+                <h3 className='text-[19px] font-semibold text-black'>Your Trip -</h3>
+
+                <div className="flex w-full items-center justify-center gap-6">
+                  <label htmlFor="checkIn" className="w-[100px] shrink-0 text-right text-lg text-black">CheckIn</label>
+                  <input type="date" min={minDate} id='checkIn' className="h-12 w-[280px] max-w-full rounded-xl border-2 border-gray-400 bg-transparent px-3 text-base text-black" required onChange={(e)=>setCheckIn(e.target.value)} value={checkIn}/>
+                </div>
+
+                <div className="flex w-full flex-col items-start justify-start gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-6">
+                  <label htmlFor="checkOut" className='text-[18px] md:text-[20px] text-black'>CheckOut</label>
+                  <input type="date" min={minDate} id='checkOut' className="h-12 w-full rounded-xl border-2 border-gray-400 bg-transparent px-3 text-base text-black sm:w-[250px]" required onChange={(e)=>setCheckOut(e.target.value)} value={checkOut}/>
+                </div>
+
+                <div className='w-[100%] flex items-center justify-center'>
+                <button className="mt-2 h-14 w-full max-w-[350px] rounded-xl bg-red-600 text-lg font-medium text-white transition-colors hover:bg-red-700" onClick={()=>handleBooking(cardDetails._id)}> Book Now</button>
+                </div>
+
+              </div>
+
+            </form>
+
+            <div className="flex min-h-[550px] w-full max-w-[565px] flex-col items-center justify-start gap-3 rounded-xl border border-gray-200 bg-[#f7fbfc] p-6 shadow-sm">
+              <div className="flex w-full items-center gap-4 rounded-xl border border-gray-400 p-3">
+                  <div className="h-[110px] w-[125px] shrink-0 overflow-hidden rounded-lg">
+                    <img
+                      className="h-full w-full object-cover"
+                      src={cardDetails.image1}
+                      alt={cardDetails.title}
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <h1 className="truncate text-sm text-gray-700">
+                      In {cardDetails.landmark?.toUpperCase()}, {cardDetails.city?.toUpperCase()}
+                    </h1>
+                    <h1 className="line-clamp-2 text-base font-medium text-gray-900">{cardDetails.title.toUpperCase()}</h1>
+                    <h1>{cardDetails.category.toUpperCase()}</h1>
+                    <h1 className="flex items-center gap-1 text-sm text-black"><MdOutlineStar className='text-[#eb6262] '/>{cardDetails.ratings}</h1>
+                  </div>
+              </div>
+
+              <div className="flex w-full flex-1 flex-col items-start justify-start gap-5 rounded-xl border border-gray-400 p-5 text-black">
+                <h1 className="text-xl font-semibold text-gray-900">
+                  Booking Price -
+                </h1>
+                <p className="flex w-full items-center justify-between gap-4 text-sm">
+                  <span className="font-semibold">
+                    ₹{cardDetails.rent} × {night} {night === 1 ? "night" : "nights"}
+                  </span>
+
+                  <span>₹{cardDetails.rent * night}</span>
+                </p>
+
+                <p className="flex w-full items-center justify-between gap-4 text-sm">
+                  <span>Tax</span>
+                  <span>₹{cardDetails.rent * night * 0.07}</span>
+                </p>
+
+                <p className="flex w-full items-center justify-between gap-4 text-sm">
+                  <span>Airbnb Charge</span>
+                  <span>₹{cardDetails.rent * night * 0.07}</span>
+                </p>
+
+                <div className="mt-1 w-full border-t border-gray-400 pt-4">
+                  <p className="flex w-full items-center justify-between gap-4 text-base font-semibold text-gray-900">
+                    <span>Total Price</span>
+                    <span>₹{total}</span>
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+      </div>}
 
   </div>
 );
