@@ -9,6 +9,7 @@ import ListingPage3 from "./pages/ListingPage3.jsx";
 import { useContext } from "react";
 import { userDataContext } from "./Context/UserContext.jsx";
 import MyListing from "./pages/MyListing.jsx";
+import ViewCard from "./pages/ViewCard.jsx";
 
 function App() {
   let {userData} = useContext(userDataContext);
@@ -29,6 +30,8 @@ function App() {
         element={userData != null ? <ListingPage3/>:<Navigate to={"/"}/>} />
       <Route path="/mylisting" 
         element={userData != null ? <MyListing/>:<Navigate to={"/"}/>} />
+      <Route path="/viewcard" 
+        element={userData != null ? <ViewCard/>:<Navigate to={"/"}/>} />
     </Routes>
   );
 }

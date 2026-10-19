@@ -20,8 +20,11 @@ function ListingContext({children}) {
   let [landmark,setLandmark] = useState("")
   let [category,setCategory] = useState("")
   let [adding,setAdding] = useState(false)
+  let [updating,setUpdating] = useState(false)
+  let [deleting,setDeleting] = useState(false)
   let [listingData,setListingData] = useState([])
   let [newListData,setNewListData] = useState([])
+  let [cardDetails,setCardDetails] = useState(null)
   let {serverUrl} = useContext(authDataContext);
   
 
@@ -63,6 +66,17 @@ function ListingContext({children}) {
     }
   }
 
+  const handleViewCard = async (id) => {
+    try {
+      let result = await axios.get( serverUrl + `/api/listing/findlistingByid/${id}`,{withCredentials:true})
+      console.log(result)
+      setCardDetails(result.data)
+      navigate("/viewcard")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const getListing = async ()=> {
     try {
       let result = await axios.get(serverUrl + "/api/listing/get", {withCredentials:true})
@@ -75,7 +89,7 @@ function ListingContext({children}) {
   }
   useEffect(()=>{
     getListing()
-  },[adding])
+  },[adding,updating,deleting])
 
 
   let value={
@@ -95,6 +109,10 @@ function ListingContext({children}) {
     adding,setAdding,
     listingData,setListingData,
     newListData,setNewListData,
+    handleViewCard,
+    cardDetails,setCardDetails,
+    updating,setUpdating,
+    deleting,setDeleting,
   }
   return (
     <div>
