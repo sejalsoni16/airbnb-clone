@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState } from 'react'
 import { authDataContext } from './AuthContext.jsx'
 import { userDataContext } from './UserContext.jsx'
 import { listingDataContext } from './ListingContext.jsx'
+import { useNavigate } from 'react-router-dom'
 
 export const bookingDataContext = createContext()
 
@@ -15,19 +16,25 @@ function BookingContext({children}) {
   let {getCurrentUser} = useContext(userDataContext)
   let {getListing} = useContext(listingDataContext)
   let [bookingData,setBookingData]=useState([])
+  let [booking,setBooking] = useState(false)
+  let navigate = useNavigate()
 
 
   const handleBooking = async (id)=>{
+    setBooking(true)
     try {
       let result = await axios.post(serverUrl + `/api/booking/create/${id}`,{checkIn,checkOut,totalRent:total},{withCredentials:true})
       await getCurrentUser()
       await getListing()
       setBookingData(result.data)
       console.log(result.data)
+      setBooking(false)
+      navigate("/booked")
 
     } catch (error) {
       console.log(error)
       setBookingData(null)
+      setBooking(false)
     }
   }
   
@@ -50,7 +57,8 @@ function BookingContext({children}) {
     night,setNight,
     bookingData,setBookingData,
     handleBooking,
-    cancelBooking
+    cancelBooking,
+    booking,setBooking
 
   }
   return (

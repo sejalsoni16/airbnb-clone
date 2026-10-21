@@ -31,7 +31,7 @@ function ViewCard() {
   let {checkIn,setCheckIn,
       checkOut,setCheckOut,
       total,setTotal,
-      night,setNight,handleBooking} = useContext(bookingDataContext)
+      night,setNight,handleBooking,booking,setBooking} = useContext(bookingDataContext)
 
       useEffect(()=>{
         if(checkIn && checkOut){
@@ -341,7 +341,7 @@ function ViewCard() {
                 </div>
 
                 <div className='w-[100%] flex items-center justify-center'>
-                <button className="mt-2 h-14 w-full max-w-[350px] rounded-xl bg-red-600 text-lg font-medium text-white transition-colors hover:bg-red-700" onClick={()=>handleBooking(cardDetails._id)}> Book Now</button>
+                <button className="mt-2 h-14 w-full max-w-[350px] rounded-xl bg-red-600 text-lg font-medium text-white transition-colors hover:bg-red-700" onClick={()=>handleBooking(cardDetails._id)} disabled={booking}> {booking?"booking...":"Book Now"}</button>
                 </div>
 
               </div>
