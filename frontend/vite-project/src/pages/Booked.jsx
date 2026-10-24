@@ -1,9 +1,13 @@
+import axios from 'axios';
 import Star from '../Component/Star.jsx';
 import { bookingDataContext } from '../Context/BookingContext.jsx'
 import React, { useContext, useState } from 'react'
 import { GiConfirmed } from "react-icons/gi"
 import { MdOutlineStar } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+import UserContext, { userDataContext } from '../Context/UserContext.jsx';
+import { authDataContext } from '../Context/AuthContext.jsx';
+import { listingDataContext } from '../Context/ListingContext.jsx';
 
 
 
@@ -11,6 +15,22 @@ function Booked() {
   let navigate = useNavigate()
   let {bookingData} = useContext(bookingDataContext)
   let [ star, setStar ] = useState(null);
+  let {serverUrl} = useContext(authDataContext)
+  let {getCurrentUser} = useContext(userDataContext)
+  let {getListing} = useContext(listingDataContext)
+  let {cardDetails} = useContext(listingDataContext)
+
+  const handleRating = async(id) => {
+    try {
+      let result = await axios.post(serverUrl + `/api/listing/ratings/${id}` ,{ratings:star}, {withCredentials:true})
+      await getListing()
+      await getCurrentUser()
+      console.log(result)
+      navigate("/")
+    } catch (error) {
+        console.log(error)
+    }
+  }
 
   const handleStar = async (value) => {
     setStar(value)
@@ -29,7 +49,7 @@ function Booked() {
       <div className='w-[95%] max-w-[600px] h-[200px] bg-white flex items-center justify-center border-[1px] border-[#b5b5b5] flex-col gap-[20px] p-[20px] md:w-[80%] rounded-lg'>
         <h1 className='text-[18px] '>{star} out of 5 Rating</h1>
         <Star onRate={handleStar}/>
-        <button className='px-[30px] py-[10px] bg-[red] hover:bg-red-700 text-white text-[18px] md:px-[100px] rounded-lg text-nowrap'>Submit</button>
+        <button className='px-[30px] py-[10px] bg-[red] hover:bg-red-700 text-white text-[18px] md:px-[100px] rounded-lg text-nowrap' onClick={()=>handleRating(cardDetails._id)}>Submit</button>
       </div>
       <button className='px-[30px] py-[10px] bg-red-600 hover:bg-red-700 text-white text-[18px] md:px-[100px] rounded-lg text-nowrap absolute top-[10px] right-[20px]' onClick={()=>navigate("/")}>Back to Home</button>
     </div>

@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react';
-import logo from '../assets/airbnblogo.jpg';
-import { IoIosSearch } from 'react-icons/io';
+import React, { useContext, useEffect, useState } from 'react';
+import logo from "../assets/havenly-logo.png";import { IoIosSearch } from 'react-icons/io';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CgProfile } from "react-icons/cg";
 import { MdWhatshot } from "react-icons/md";
@@ -26,7 +25,8 @@ function Nav() {
   let {serverUrl} = useContext(authDataContext)
   let {userData, setUserData} = useContext(userDataContext)
   let [cate,setCate] = useState()
-  let {listingData,setListingData,newListData,setNewListData} = useContext(listingDataContext)
+  let {listingData,setListingData,newListData,setNewListData,searchData,handleSearch,handleViewCard} = useContext(listingDataContext)
+  let [input, setInput] = useState("")
 
 
   const handleLogout = async() => {
@@ -48,17 +48,35 @@ function Nav() {
     }
 
     }
+    const handleClick = (id)=>{
+    if(userData){
+      handleViewCard(id)
+    }
+    else{
+      navigate("/login")
+    }
+  }
+
+    useEffect(()=>{
+      handleSearch(input)
+    },[input])
+
   return (
     <div className='fixed top-0 left-0 z-[200] bg-[white]'>
       <div className='w-[100vw] min-h-[80px] border-b-[1px] border-[#dcdcdc] px-[10px] flex items-center justify-between md:px-[40px] '>
 
-        <div>
-          <img src={logo} alt="" className='w-[180px] min-h-[70px]' />
+        <div className="flex items-center">
+          <img
+            src={logo}
+            alt="Havenly - Stays That Feel Like Home"
+            className="w-[150px] min-h-[65px]"
+          />
         </div>
 
+
         <div className='w-[35%] relative hidden md:block'>
-          <input type="text" className='w-[100%] px-[30px] py-[10px] border-[2px] border-[#bdbaba] outline-none overflow-auto rounded-[30px] text-[17px]' placeholder="Any Where | Any Location | Any City"/>
-          <button className='absolute p-[10px] rounded-[50px] bg-[red] right-[3%] top-[5px]'><IoIosSearch className='w-[24px] h-[20px] text-[white]' /></button>
+          <input type="text" className='w-[100%] px-[30px] py-[10px] border-[2px] border-[#bdbaba] outline-none overflow-auto rounded-[30px] text-[17px]' placeholder="Any Where | Any Location | Any City" onChange={(e)=>setInput(e.target.value)}/>
+          <button className='absolute p-[10px] rounded-[50px] bg-[#326e5b] right-[3%] top-[5px]'><IoIosSearch className='w-[24px] h-[20px] text-[white]' /></button>
         </div>
 
         <div className='flex items-center justify-center gap-[10px] relative z-[100]'>
@@ -87,11 +105,23 @@ function Nav() {
 
         </div>
 
+        {searchData?.length>0 && <div className='w-[100vw] h-[450px] flex flex-col gap-[20px] absolute top-[50%] overflow-auto left-[0] justify-start items-center'>
+          <div className='max-w-[700px] w-[100vw] h-[300px] overflow-hidden flex flex-col bg-white p-[20px] rounded-lg border-[1px] border-[#a2a1a1] cursor-pointer'>
+            {
+              searchData.map((search)=>(
+                <div className='border-b border-[black] p-[10px]' onClick={()=>handleClick(search._id)}>
+                  {search.title} in {search.landmark},{search.city}
+                </div>
+              ))
+            }
+          </div>
+        </div>}
+
       </div>
 
       <div className='w-[100%] h-[60px] flex items-center justify-center block md:hidden' >
         <div className='w-[35%] relative '>
-          <input type="text" className='w-[100%] px-[30px] py-[10px] border-[2px] border-[#bdbaba] outline-none overflow-auto rounded-[30px] text-[17px]' placeholder="Any Where | Any Location | Any City"/>
+          <input type="text" className='w-[100%] px-[30px] py-[10px] border-[2px] border-[#bdbaba] outline-none overflow-auto rounded-[30px] text-[17px]' placeholder="Any Where | Any Location | Any City" onChange={(e)=>setInput(e.target.value)}/>
           <button className='absolute p-[10px] rounded-[50px] bg-[red] right-[3%] top-[5px]'><IoIosSearch className='w-[20px] h-[20px] text-[white]' /></button>
         </div>
       </div>

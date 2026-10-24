@@ -6,7 +6,7 @@ import Card from '../Component/Card.jsx';
 function Home() {
   let {listingData,setListingData,newListData,setNewListData}=useContext(listingDataContext)
   return (
-    <div>
+    <div >
       <Nav/>
       <div className='relative z-0 w-[100vw] min-h-[77vh] flex items-center justify-center gap-[25px] flex-wrap mt-[250px] md:mt-[180px]'>
         {newListData.map((list)=>(

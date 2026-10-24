@@ -8,6 +8,7 @@ import axios from 'axios';
 import { authDataContext } from '../Context/AuthContext.jsx';
 import { MdOutlineStar } from "react-icons/md";
 import { bookingDataContext } from '../Context/BookingContext.jsx';
+import { toast } from 'react-toastify';
 
 
 function ViewCard() {
@@ -70,6 +71,7 @@ function ViewCard() {
         let result = await axios.post( serverUrl + `/api/listing/update/${cardDetails._id}` , formData, {withCredentials:true})
         setUpdating(false)
         console.log(result)
+        toast.success("Listing Updated Successfully")
         navigate("/")
         setTitle("")
         setDescription("")
@@ -86,6 +88,7 @@ function ViewCard() {
       
       console.log("Error:", error.response?.data);
       console.log("Status:", error.response?.status);
+      toast.error(error.response.data.message)
     }
   }
 
@@ -97,9 +100,12 @@ function ViewCard() {
       console.log(result.data)
       setDeleting(false)
       navigate("/");
+      toast.success("Listing Deleted Successfully")
     } catch (error) {
       console.log(error)
       setDeleting(false)
+      toast.error(error.response.data.message)
+
     }
   }
     const handleImage1 = (e)=>{
@@ -249,7 +255,7 @@ function ViewCard() {
       <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm">
         <button
           type="button"
-          className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white" onClick={() => setUpdatePopUp(false)}
+          className="fixed left-4 top-4 z-[120] flex h-12 w-12 items-center justify-center rounded-full bg-red-600 text-white shadow-lg" onClick={() => setUpdatePopUp(false)}
         >
           <RxCross2 className="h-6 w-6" />
         </button>
@@ -317,23 +323,36 @@ function ViewCard() {
       </div>
     )}
 
-      {bookingPopUp && <div className="absolute inset-0 z-[100] flex items-center justify-center gap-8 overflow-y-auto bg-white/80 p-6 backdrop-blur-sm lg:flex-row" >
+      {bookingPopUp && <div className="fixed inset-0 z-[100] flex flex-col items-center justify-start gap-4 overflow-x-hidden overflow-y-auto bg-white/90 p-3 pt-16 backdrop-blur-sm sm:p-5 sm:pt-16 lg:flex-row lg:items-center lg:justify-center lg:gap-8 lg:p-6" >
 
         <button type="button" className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white" onClick={() => setBookingPopUp(false)}>
           <RxCross2 className="h-6 w-6" />
         </button>
           
-            <form action="" className="flex min-h-[550px] w-full max-w-[565px] flex-col items-center justify-start gap-5 rounded-xl border border-gray-200 bg-[#f7fbfc] p-6 shadow-sm" onSubmit={(e)=>{e.preventDefault()}}>
+            <form action="" className="flex min-h-0 w-full max-w-[565px] shrink-0 flex-col items-center justify-start gap-5 rounded-xl border border-gray-200 bg-[#f7fbfc] p-4 shadow-sm sm:p-6 lg:min-h-[550px]" onSubmit={(e)=>{e.preventDefault()}}>
               <h1 className="w-full border-b border-gray-400 pb-4 text-center text-2xl font-normal text-black">
                 Confirm & Book
               </h1>
               <div className="flex w-full flex-1 flex-col items-start justify-start gap-7 pt-4">
                 <h3 className='text-[19px] font-semibold text-black'>Your Trip -</h3>
 
-                <div className="flex w-full items-center justify-center gap-6">
-                  <label htmlFor="checkIn" className="w-[100px] shrink-0 text-right text-lg text-black">CheckIn</label>
-                  <input type="date" min={minDate} id='checkIn' className="h-12 w-[280px] max-w-full rounded-xl border-2 border-gray-400 bg-transparent px-3 text-base text-black" required onChange={(e)=>setCheckIn(e.target.value)} value={checkIn}/>
+                <div className="flex w-full flex-col items-start justify-center gap-2 sm:flex-row sm:items-center sm:gap-6">
+                  <label
+                    htmlFor="checkIn"
+                    className="text-lg text-black sm:w-[100px] sm:shrink-0                sm:text-right"
+                  >
+                    CheckIn
+                  </label>
+
+                  <input type="date" min={minDate} id="checkIn"
+                    className="h-12 w-full min-w-0 rounded-xl border-2 border-gray-400 bg-transparent px-3 text-base text-black sm:w-[280px]"
+                    required
+                    onChange={(e) => setCheckIn(e.target.value)}
+                    value={checkIn}
+                  />
+
                 </div>
+
 
                 <div className="flex w-full flex-col items-start justify-start gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-6">
                   <label htmlFor="checkOut" className='text-[18px] md:text-[20px] text-black'>CheckOut</label>
@@ -363,11 +382,11 @@ function ViewCard() {
                     </h1>
                     <h1 className="line-clamp-2 text-base font-medium text-gray-900">{cardDetails.title.toUpperCase()}</h1>
                     <h1>{cardDetails.category.toUpperCase()}</h1>
-                    <h1 className="flex items-center gap-1 text-sm text-black"><MdOutlineStar className='text-[#eb6262] '/>{cardDetails.ratings}</h1>
+                    <h1 className="flex items-center gap-1 text-sm text-black"><MdOutlineStar className='text-[#d60404] '/>{cardDetails.ratings}</h1>
                   </div>
               </div>
 
-              <div className="flex w-full flex-1 flex-col items-start justify-start gap-5 rounded-xl border border-gray-400 p-5 text-black">
+              <div className="flex w-full min-w-0 flex-1 flex-col items-start justify-start gap-5 rounded-xl border border-gray-400 p-4 text-black sm:p-5">
                 <h1 className="text-xl font-semibold text-gray-900">
                   Booking Price -
                 </h1>
